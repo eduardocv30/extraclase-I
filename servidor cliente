@@ -1,0 +1,39 @@
+package extraclase_1;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Logger;
+
+public class Servidor {
+    public static void main(String[] args) {
+        ServerSocket servidor = null;
+        Socket socketcliente= null;
+        DataInputStream in;
+        DataOutputStream out;
+        final int PUERTO = 3333;
+        try {
+            servidor = new ServerSocket(PUERTO);
+            System.out.println("servidor iniciado");
+            while(true){
+                socketcliente = servidor.accept();
+                System.out.println("cliente conectado");
+                in = new DataInputStream(socketcliente.getInputStream());
+                out= new DataOutputStream(socketcliente.getOutputStream());
+
+                String valor= in.readUTF();
+                String porcentaje= in.readUTF();
+                String peso= in.readUTF();
+                int valorE= Integer.parseInt(valor);
+                int porcentajeE= Integer.parseInt(porcentaje);
+                int pesoE= Integer.parseInt(peso);
+                Double monto=((valorE* porcentajeE )/100) + pesoE*0.15;
+                System.out.println(monto);
+                out.writeUTF(String.valueOf(monto));}
+
+
+        }catch(Exception e){};
+    }
+
+
+}
