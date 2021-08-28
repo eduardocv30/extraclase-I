@@ -5,41 +5,27 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-import javax.print.DocFlavor.STRING;
 
-public class Cliente { 
-    public static void main(String[] args) {
-        final String HOST= "127.0.0.1";
-        DataInputStream in;
-        DataOutputStream out;
-        Scanner entrada= new Scanner(System.in);
-        int valor;
-        int porcentaje;
-        int peso;
-        System.out.println("dijite el valor");
-        valor= entrada.nextInt();
-        System.out.println("dijite el porcentaje");
-        porcentaje= entrada.nextInt();
-        System.out.println("dijite el peso");
-        peso=entrada.nextInt();
-        final int PUERTO = 3333;
-        System.out.println("cliente activado");
+public class Cliente implements Runnable { 
+    private int PUERTO;
+    private String mensaje;
+
+    public Cliente (int PUERTO, String mensaje) {
+        this.PUERTO=PUERTO;
+        this.mensaje=mensaje;}
+
+        @Override
+        public void run() {
+            final String HOST= "127.0.0.1";
+            DataInputStream in;
+            DataOutputStream out;
 
         try{
             Socket socketcliente = new Socket(HOST,PUERTO);
-
+            System.out.println("cliente iniciado");
             in = new DataInputStream(socketcliente.getInputStream());
             out = new DataOutputStream(socketcliente.getOutputStream());
-            out.writeUTF(Integer.toString(valor));
-            out.writeUTF(Integer.toString(porcentaje));
-            out.writeUTF(Integer.toString(peso));
-            String monto=in.readUTF();
-            System.out.println(monto);
-
-            socketcliente.close();}catch(Exception e){};
+            out.writeUTF(mensaje);
+            socketcliente.close();}catch(Exception e){}
+        }
     }
-
-  
-
-    
-}
