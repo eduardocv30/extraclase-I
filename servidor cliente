@@ -1,23 +1,27 @@
-package extraclase_1;
+package extraclase_1.src;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Logger;
 import java.util.Scanner;
+import java.util.Observable;
 
-public class Servidor {
-    public static void main(String[] args) {
+public class Servidor extends Observable implements Runnable{
+    private int PUERTO;
+
+    public Servidor(int PUERTO){
+        this.PUERTO=PUERTO;
+    }
+    @Override
+    public void run() {
         ServerSocket servidor = null;
         Socket socketcliente= null;
         DataInputStream in;
         DataOutputStream out;
-        Scanner entrada= new Scanner(System.in);
-        int valorE;
-        int porcentajeE;
-        int pesoE;
-        int opción;
-        final int PUERTO = 3333;
+
+
         try {
             servidor = new ServerSocket(PUERTO);
             System.out.println("servidor iniciado");
@@ -26,34 +30,17 @@ public class Servidor {
                 System.out.println("cliente conectado");
                 in = new DataInputStream(socketcliente.getInputStream());
                 out= new DataOutputStream(socketcliente.getOutputStream());
-
-                System.out.println("Que acción desea realizar:");
-                System.out.println("(1) solicitar cálculo");
-                System.out.println("(2) realizarcálculo");
-                opción=entrada.nextInt();
-                switch(opción){
-                    case 1:
-                        System.out.println("dijite el valor");
-                        valorE= entrada.nextInt();
-                        System.out.println("dijite el porcentaje");
-                        porcentajeE= entrada.nextInt();
-                        System.out.println("dijite el peso");
-                        pesoE=entrada.nextInt();
-                        out.writeUTF(Integer.toString(valorE));
-                        out.writeUTF(Integer.toString(porcentajeE));
-                        out.writeUTF(Integer.toString(pesoE));
-                        String montoR=in.readUTF();
-                        System.out.println(montoR);
-                        break;
-                    case 2:
-                        String valorR= in.readUTF();
-                        String porcentajeR= in.readUTF();
-                        String pesoR= in.readUTF();
-                        valorE= Integer.parseInt(valorR);
-                        porcentajeE= Integer.parseInt(porcentajeR);
-                        pesoE= Integer.parseInt(pesoR);
-                        Double montoE=((valorE* porcentajeE )/100) + pesoE*0.15;
-                        out.writeUTF(String.valueOf(montoE));
-                        socketcliente.close();}
+                String mensaje = in.readUTF();
+                this.setChanged();
+                this.notifyObservers(mensaje);
+                this.clearChanged();
+                socketcliente.close();}
+                
                     
-                break;} 
+                }catch(Exception e){};}
+      
+        
+    }
+        
+
+
