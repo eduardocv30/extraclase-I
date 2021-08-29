@@ -3,10 +3,11 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.Observable;
 import java.util.Scanner;
 
 
-public class Cliente implements Runnable { 
+public class Cliente extends Observable implements Runnable { 
     private int PUERTO;
     private String mensaje;
 
@@ -22,10 +23,14 @@ public class Cliente implements Runnable {
 
         try{
             Socket socketcliente = new Socket(HOST,PUERTO);
-            System.out.println("cliente iniciado");
             in = new DataInputStream(socketcliente.getInputStream());
             out = new DataOutputStream(socketcliente.getOutputStream());
             out.writeUTF(mensaje);
-            socketcliente.close();}catch(Exception e){}
+            String monto=in.readUTF();
+            this.setChanged();
+            this.notifyObservers(monto+"\n");
+            this.clearChanged();
+            socketcliente.close();
+            }catch(Exception e){}
         }
     }
