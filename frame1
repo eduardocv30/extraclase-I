@@ -1,0 +1,111 @@
+package extraclase_1.src;
+
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.JScrollPane;
+
+public class frame1 extends javax.swing.JFrame implements Observer {
+
+    public frame1(){
+        initComponents();
+        this.getRootPane().setDefaultButton(this.botonEnviar);
+        Servidor server = new Servidor(3000);
+        server.addObserver(this);
+        
+        Thread thread = new Thread(server);
+        thread.start();
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void initComponents(){
+        JScrollPane1 =new javax.swing.JScrollPane();
+        Texto=new javax.swing.JTextArea();
+        botonEnviar = new javax.swing.JButton();
+        TextoEnviar = new javax.swing.JTextField();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("chat 1");
+        this.Texto.append("para solicitar un calculo escriba (calculo:valor:porcentaje:peso:)\n");
+
+        Texto.setColumns(20);
+        Texto.setRows(5);
+        JScrollPane1.setViewportView(Texto);
+
+        botonEnviar.setText("Enviar");
+        botonEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEnviarActionPerformed(evt);
+            }  
+        });
+
+        javax.swing.GroupLayout layout= new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(TextoEnviar)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(botonEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(JScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+            .addContainerGap())
+        );
+    
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(botonEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                    .addComponent(TextoEnviar))
+                .addContainerGap())
+        );
+        pack();}
+
+        private void botonEnviarActionPerformed(java.awt.event.ActionEvent evt){
+            String mensaje = "1:" + this.TextoEnviar.getText() + "\n"; // esto es lo que envio
+            this.Texto.append(mensaje);
+            Cliente c = new Cliente(9000,mensaje);
+            c.addObserver(this);
+            Thread t= new Thread(c);
+            t.start();
+
+        }
+
+
+        public static void main(String args[]){
+            try{for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()){
+                if ("Nimbus".equals(info.getName())){
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+
+            }catch(Exception e){}
+            java.awt.EventQueue.invokeLater(new Runnable(){
+
+
+                @Override
+                public void run() {
+                    new frame1().setVisible(true);
+                    
+                }
+
+            });
+        }
+    private javax.swing.JButton botonEnviar;
+    private javax.swing.JScrollPane JScrollPane1;
+    private javax.swing.JTextArea Texto;
+    private javax.swing.JTextField TextoEnviar;
+    
+
+    @Override
+    public void update(Observable o, Object arg) {
+        
+        this.Texto.append((String) arg);
+    }
+    
+}
