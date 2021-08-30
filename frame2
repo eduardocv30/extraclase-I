@@ -4,6 +4,11 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JScrollPane;
 
+/**
+ * posee el mismo funcionamiento que le frame 1, se invierten los puertos 
+ * y se agrega un 2 en el momento de mostar el mensaje
+ */
+
 public class frame2 extends javax.swing.JFrame implements Observer {
 
     public frame2(){
