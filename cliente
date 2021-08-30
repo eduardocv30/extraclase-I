@@ -4,23 +4,39 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.Observable;
-import java.util.Scanner;
 
+/**
+ * Esta clase esta encargada de enviar los mensajes, solo recibe el monto final
+ * 
+ * @author Eduardo Cruz
+ */
 
 public class Cliente extends Observable implements Runnable { 
     private int PUERTO;
     private String mensaje;
 
+    /**
+     * Establece la conexión 
+     * @param PUERTO número de puerto para comunicación
+     * @param mensaje contenido que se va a enviar
+     */
     public Cliente (int PUERTO, String mensaje) {
         this.PUERTO=PUERTO;
         this.mensaje=mensaje;}
 
+        /**
+        * el HOST= "127.0.0.1" hace referencia a la ip del propio computador
+        * DataInputStream in; permite la entrada de datos
+        * DataOutputStream out; permite la salida de
+        */
         @Override
         public void run() {
             final String HOST= "127.0.0.1";
             DataInputStream in;
             DataOutputStream out;
-
+        /**
+         * cuando recibe el monto desde el servidor lo notifica al observador
+         */
         try{
             Socket socketcliente = new Socket(HOST,PUERTO);
             in = new DataInputStream(socketcliente.getInputStream());
