@@ -4,20 +4,29 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JScrollPane;
 
-public class frame1 extends javax.swing.JFrame implements Observer {
+/**
+ * esta es la interfaz gráfica donde se leen envían y muestran los mensajes
+ * @author Eduardo Cruz
+ */
 
+public class frame1 extends javax.swing.JFrame implements Observer {
     public frame1(){
         initComponents();
         this.getRootPane().setDefaultButton(this.botonEnviar);
+        /**
+         * inico el servidor, el puerto de este servidor de ser el del cliente en el otro frame
+         */
         Servidor server = new Servidor(3000);
         server.addObserver(this);
-        
         Thread thread = new Thread(server);
         thread.start();
     }
     
     @SuppressWarnings("unchecked")
     private void initComponents(){
+        /**
+         * creo los elementos de mi interfaz
+         */
         JScrollPane1 =new javax.swing.JScrollPane();
         Texto=new javax.swing.JTextArea();
         botonEnviar = new javax.swing.JButton();
@@ -25,18 +34,20 @@ public class frame1 extends javax.swing.JFrame implements Observer {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("chat 1");
         this.Texto.append("para solicitar un calculo escriba (calculo:valor:porcentaje:peso:)\n");
-
         Texto.setColumns(20);
         Texto.setRows(5);
         JScrollPane1.setViewportView(Texto);
-
+        
+        /**
+         * activo el botón , su funcionamiento concrteo se programa más adelante
+         */
         botonEnviar.setText("Enviar");
         botonEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonEnviarActionPerformed(evt);
             }  
         });
-
+        
         javax.swing.GroupLayout layout= new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -66,7 +77,11 @@ public class frame1 extends javax.swing.JFrame implements Observer {
         pack();}
 
         private void botonEnviarActionPerformed(java.awt.event.ActionEvent evt){
-            String mensaje = "1:" + this.TextoEnviar.getText() + "\n"; // esto es lo que envio
+            /**
+             * se toma el texto escrito en TextoEnviar y se manda al servidor
+             * ademas se imprima ese texto en mi propia pantalla 
+             */
+            String mensaje = "1:" + this.TextoEnviar.getText() + "\n";
             this.Texto.append(mensaje);
             Cliente c = new Cliente(9000,mensaje);
             c.addObserver(this);
